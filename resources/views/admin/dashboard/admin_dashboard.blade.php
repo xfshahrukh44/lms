@@ -10,28 +10,138 @@
 @section('content_body')
 
     <div class = "row">
-        <div class="col-lg-6 col-6" style = "text-align: center;">
+
+        <div class="col-lg-4 col-6" style = "text-align: center;">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-maroon">
+                <div class="inner">
+                <h3> Classes </h3>
+
+                <p><strong><br></strong></p>
+                </div>
+                <div class="icon">
+                <i class="material-icons">cast_for_education</i>
+                </div>
+                <a href="{{route('classroom.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-6" style = "text-align: center;">
+            <!-- small box -->
+            <div class="small-box bg-orange">
+                <div class="inner">
+                <h3> Teachers </h3>
+
+                <p><strong><br></strong></p>
+                </div>
+                <div class="icon">
+                <i class="material-icons">record_voice_over</i>
+                </div>
+                <a href="{{route('teacher.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-6" style = "text-align: center;">
+            <!-- small box -->
+            <div class="small-box bg-maroon">
+                <div class="inner">
+                <h3> Sections </h3>
+
+                <p><strong><br></strong></p>
+                </div>
+                <div class="icon">
+                <i class="material-icons">sort_by_alpha</i>
+                </div>
+                <a href="{{route('section.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-6" style = "text-align: center;">
+            <!-- small box -->
+            <div class="small-box bg-orange">
+                <div class="inner">
+                <h3> Students </h3>
+
+                <p><strong><br></strong></p>
+                </div>
+                <div class="icon">
+                <i class="material-icons">people</i>
+                </div>
+                <a href="{{route('student.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-6" style = "text-align: center;">
+            <!-- small box -->
+            <div class="small-box bg-blue">
+                <div class="inner">
+                <h3> Roles </h3>
+
+                <p><strong><br></strong></p>
+                </div>
+                <div class="icon">
+                <i class="material-icons">account_tree</i>
+                </div>
+                <a href="{{route('role.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-6" style = "text-align: center;">
+            <!-- small box -->
+            <div class="small-box bg-maroon">
+                <div class="inner">
+                <h3> Courses </h3>
+
+                <p><strong><br></strong></p>
+                </div>
+                <div class="icon">
+                <i class="material-icons">menu_book</i>
+                </div>
+                <a href="{{route('course.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        
+
+       
+
+        <div class="col-lg-8 col-6" style = "text-align: center;">
+            <!-- small box -->
+            <div class="small-box bg-blue">
+                <div class="inner">
+                <h3> Accounts </h3>
+
+                <p><strong><br></strong></p>
+                </div>
+                <div class="icon">
+                <i class="material-icons">alternate_email</i>
+                </div>
+                <a href="{{route('user.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6" style = "text-align: center;">
+            <!-- small box -->
+            <div class="small-box bg-info">
                 <div class="inner">
                 <h3> {{$assignment_count}} </h3>
 
-                <p><strong>New assignment/s</strong></p>
+                <p><strong>Assignment/s</strong></p>
                 </div>
                 <div class="icon">
-                <i class="material-icons">priority_high</i>
+                <i class="material-icons">assignment</i>
                 </div>
                 <a href="{{route('assignment.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
-        <div class="col-lg-6 col-6" style = "text-align: center;">
+        <div class="col-lg-3 col-6" style = "text-align: center;">
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                <h3> Your </h3>
+                <h3> {{$submission_count}} </h3>
 
-                <p><strong>submission/s ({{$submission_count}})</strong></p>
+                <p><strong>Submission/s</strong></p>
                 </div>
                 <div class="icon">
                 <i class="material-icons">done_all</i>
@@ -40,7 +150,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6 col-6" style = "text-align: center;">
+        <div class="col-lg-3 col-6" style = "text-align: center;">
             <!-- small box -->
             <div class="small-box bg-warning">
             <div class="inner">
@@ -55,7 +165,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6 col-6" style = "text-align: center;">
+        <div class="col-lg-3 col-6" style = "text-align: center;">
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
@@ -67,21 +177,6 @@
                 <i class="material-icons">watch_later</i>
                 </div>
                 <a href="{{route('attendance.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-
-        <div class="col-lg-6 col-6" style = "text-align: center;">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{$grade}}</h3>
-
-                <p><strong>Your current grade</strong></p>
-              </div>
-              <div class="icon">
-                <i class="material-icons">star_rate</i>
-              </div>
-              <a href="{{route('portal')}}" class="small-box-footer">View portal <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>

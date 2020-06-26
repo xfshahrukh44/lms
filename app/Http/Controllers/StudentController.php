@@ -144,6 +144,31 @@ class StudentController extends Controller
     public function view_dashboard(Request $request)
     {
         $student = (Student::where('user_id', auth()->user()->id)->get())[0];
+
+        //new assignments
+        $assignment_count = 0;
+        $section = Section::find($student->section_id);
+        foreach($section->sessions as $session)
+        {
+            foreach($session->assignments as $asgn)
+            {
+                $check = Submission::where('student_id', $student->id && 'assignment_id', $asgn->id)->get();
+                if(count($check) == 0)
+                {
+                    $assignment_count += 1;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+        
+        //your submissions
+        $submission = Submission::where('student_id', $student->id)->get();
+        $submission_count = count($submission);
+
+        //live classes
         $live_class_count = 0;
         foreach($student->section->sessions as $session)
         {
@@ -152,22 +177,58 @@ class StudentController extends Controller
                 $live_class_count += 1;
             }
         }
+
+        //time spent this month
         $attendances = Attendance::where('user_id', $student->user_id)
-                        ->whereDate('check_out', '<', Carbon::now()->addMonths(1))
+                        ->whereDate('check_in', '<', Carbon::now()->addMonths(1))
                         ->whereDate('check_in', '>', Carbon::now()->subMonths(1))
                         ->get();
-        $work_hours = 1;
-        foreach($attendances as $attendance)
-        {
-            $check_in = Carbon::parse($attendance->check_in);
-            $check_out = Carbon::parse($attendance->check_out);
-            $work_hours += $check_in->diffInSeconds($check_out);
+        $previous_work_hours = 0;
+        $counter = -1;
+        if(count($attendances) > 0){
+            foreach($attendances as $attendance)
+            {
+                if($attendance->check_in && $attendance->check_out)
+                {
+                    $check_in = Carbon::parse($attendance->check_in);
+                    $check_out = Carbon::parse($attendance->check_out);
+                    $previous_work_hours += $check_in->diffInSeconds($check_out);
+                }
+                $counter++;
+            }
+
+            if($attendances[$counter]->check_out)
+            {
+                $wh = gmdate('H:i:s', $previous_work_hours);
+                $check = 'out';
+                $days = gmdate('d H:i:s', $previous_work_hours);
+                $total_days = substr($days,0,2)-1;
+            }
+            else
+            {
+                $current_checkin = Carbon::parse($attendances[$counter]->check_in);
+                $currenttime = Carbon::now()->addHours(5);
+                $work_hours = $current_checkin->diffInSeconds($currenttime);
+                $total_work_hours = $work_hours + $previous_work_hours;
+                $wh = gmdate('H:i:s', $total_work_hours);
+                $check = 'in';
+                $days = gmdate('d H:i:s', $total_work_hours);
+                $total_days = substr($days,0,2)-1;
+            }
         }
-        $work_hours = gmdate('H:i:s',$work_hours);
-        return view('admin.dashboard.student_dashboard', compact('student', 'live_class_count', 'work_hours'));
+        else
+        {
+            $wh = gmdate('H:i:s',0);
+            $check = 'out';
+            $total_days = 0;
+        }
+
+        //grade
+        $grade = $this->view_portal(1);
+        return view('admin.dashboard.student_dashboard', compact('assignment_count', 'submission_count', 'student', 'live_class_count', 'wh','check','total_days', 'grade'));
     }
 
-    public function view_portal()
+    public function view_portal($dashboard = 0)
     {
         $student = Student::where('user_id', auth()->user()->id)->get();
         $section = Section::find($student[0]->section_id);
@@ -203,8 +264,38 @@ class StudentController extends Controller
             array_push($main, $dict);
             
         } 
-        return view('admin.student.student_portal', compact('main', 'student'));
-        // dd($main);
-        // exit();
+        if($dashboard != 1)
+        {
+            return view('admin.student.student_portal', compact('main', 'student'));
+        }
+        else
+        {
+            $count = 0;
+            $main_percentage = 0;
+            $grade = '';
+            foreach($main as $dict)
+            {
+                $main_percentage += $dict['percentage'];
+                $count += 1;
+            }
+            $main_percentage = $main_percentage/$count;
+            if($main_percentage > 89)
+            {
+                $grade = 'A';
+            }
+            else if($main_percentage > 79 && $main_percentage < 90)
+            {
+                $grade = 'B';
+            }
+            else if($main_percentage > 69 && $main_percentage < 80)
+            {
+                $grade = 'C';
+            }
+            else if($main_percentage > 59 && $main_percentage < 70)
+            {
+                $grade = 'D';
+            }
+            return $grade;
+        }
     }
 }

@@ -19,12 +19,11 @@ class CreateSubmissionsTable extends Migration
             $table->integer('assignment_id');
             $table->integer('student_id');
             $table->integer('marks')->nullable();
-            // $table->binary('file')->nullable;
-            $table->string('type');
+            $table->string('file')->nullable;
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE submissions ADD file MEDIUMBLOB");
+        // DB::statement("ALTER TABLE submissions ADD file MEDIUMBLOB");
     }
 
     /**

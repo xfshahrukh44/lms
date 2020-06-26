@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 
+Route::get('guest', 'MainController@guest');
 
 //admin only
 Route::group(['middleware' => ['auth', 'role:admin']], function()
 {
-    Route::get('/', 'SchoolController@index');
     Route::resource('/program', 'ProgramController');
     Route::resource('/school', 'SchoolController');
     Route::resource('/classroom', 'ClassroomController');
@@ -30,12 +30,13 @@ Route::group(['middleware' => ['auth', 'role:admin']], function()
     Route::resource('/course', 'CourseController');
     Route::resource('/role', 'RoleController');
     Route::resource('/user', 'UserController');
+    Route::get('/adminhome', 'AdminController@view_dashboard')->name('adminhome');
 });
 
 //all users
 Route::group(['middleware' => ['auth', 'role:admin|teacher|student']], function()
 {
-    Route::get('/', 'SessionController@index');
+    Route::get('/', 'MainController@dashboard');
     Route::resource('/session', 'SessionController');
     Route::resource('/attendance', 'AttendanceController');
     Route::resource('/assignment', 'AssignmentController');
@@ -51,7 +52,7 @@ Route::group(['middleware' => ['auth', 'role:admin|teacher|student']], function(
 Route::group(['middleware' => ['auth', 'role:admin|teacher']], function()
 {
     Route::resource('/teacher', 'TeacherController');
-    Route::get('/teacherhome', 'TeacherController@view_dashboard');
+    Route::get('/teacherhome', 'TeacherController@view_dashboard')->name('teacherhome');
     Route::get('/teachersubmissions', 'SubmissionController@unmarked_submissions')->name('teachersubmissions');
 });
 
@@ -59,6 +60,6 @@ Route::group(['middleware' => ['auth', 'role:admin|teacher']], function()
 Route::group(['middleware' => ['auth', 'role:admin|student']], function()
 {
     Route::resource('/student', 'StudentController');
-    Route::get('/studenthome', 'StudentController@view_dashboard');
+    Route::get('/studenthome', 'StudentController@view_dashboard')->name('studenthome');
     Route::get('portal', 'StudentController@view_portal')->name('portal');
 });

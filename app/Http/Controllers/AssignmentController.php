@@ -10,6 +10,7 @@ use App\Models\Submission;
 use Auth;
 use DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Http\Request;
 
@@ -104,15 +105,29 @@ class AssignmentController extends Controller
                 'title' => 'required',
                 'marks' => 'required',
             ]);
-            $type = $_FILES['file']['type'];
-            $data = file_get_contents($_FILES['file']['tmp_name']);
+            // $type = $_FILES['file']['type'];
+            // $data = file_get_contents($_FILES['file']['tmp_name']);
+
+            //Purging Files Code Start//
+            $assignment = Assignment::all();
+            if(count($assignment) > 100){
+                for($i = 0; $i < 10; $i++){
+                    Storage::delete($assignment[$i]->file);
+                    Assignment::where('id', $assignment[$i]->id)->delete();
+                }
+            }
+            //Purging Files Code End//
+
+            $session = Session::find($request->session_id);
+            // dd(auth()->user()->name);
+            // exit();
+            $path = $request->file('file')->storeAs('public', auth()->user()->name.' - '.$session->course->title.' - '.$_FILES['file']['name']);
             DB::table('assignments')->insert([
                 'session_id' => $request->session_id,
                 'title' => $request->title,
                 'description' => $request->description,
                 'marks' => $request->marks,
-                'file' => $data,
-                'type' => $type,
+                'file' => $path,
             ]);
             return redirect()->route('session.show', $request->session_id);
         }
@@ -294,31 +309,34 @@ class AssignmentController extends Controller
 
     public function download(Request $request)
     {
+
         if(auth()->user()->hasRole('admin'))
         {
             $assignment = Assignment::find($request['assignment_id']);
             $file_contents = $assignment->file;
-            return response($file_contents)
-                ->header('Cache-Control', 'no-cache private')
-                ->header('Content-Description', 'File Transfer')
-                ->header('Content-Type', $assignment->type)
-                ->header('Content-length', strlen($file_contents))
-                ->header('Content-Transfer-Encoding', 'binary');
+            return Storage::download($assignment->file);
+            // return response($file_contents)
+            //     ->header('Cache-Control', 'no-cache private')
+            //     ->header('Content-Description', 'File Transfer')
+            //     ->header('Content-Type', $assignment->type)
+            //     ->header('Content-length', strlen($file_contents))
+            //     ->header('Content-Transfer-Encoding', 'binary');
         }
         if(auth()->user()->hasRole('teacher'))
         {
-            $assignment = Assignment::find($id);
+            $assignment = Assignment::find($request->assignment_id);
             $teacher = Teacher::where('user_id', auth()->user()->id)->get();
             if($assignment->session->teacher_id == $teacher[0]->id)
             {
-                $assignment = Assignment::find($request['assignment_id']);
-                $file_contents = $assignment->file;
-                return response($file_contents)
-                ->header('Cache-Control', 'no-cache private')
-                ->header('Content-Description', 'File Transfer')
-                ->header('Content-Type', $assignment->type)
-                ->header('Content-length', strlen($file_contents))
-                ->header('Content-Transfer-Encoding', 'binary');
+               return Storage::download($assignment->file);
+                // $assignment = Assignment::find($request['assignment_id']);
+                // $file_contents = $assignment->file;
+                // return response($file_contents)
+                // ->header('Cache-Control', 'no-cache private')
+                // ->header('Content-Description', 'File Transfer')
+                // ->header('Content-Type', $assignment->type)
+                // ->header('Content-length', strlen($file_contents))
+                // ->header('Content-Transfer-Encoding', 'binary');
             }
             else
             {

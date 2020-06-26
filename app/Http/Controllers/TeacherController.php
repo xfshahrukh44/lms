@@ -143,6 +143,8 @@ class TeacherController extends Controller
     public function view_dashboard(Request $request)
     {
         $teacher = (Teacher::where('user_id', auth()->user()->id)->get())[0];
+
+        //live class count
         $live_class_count = 0;
         foreach($teacher->sessions as $session)
         {
@@ -152,17 +154,71 @@ class TeacherController extends Controller
             }
         }
         $attendances = Attendance::where('user_id', $teacher->user_id)
-                        ->whereDate('check_out', '<', Carbon::now()->addMonths(1))
+                        ->whereDate('check_in', '<', Carbon::now()->addMonths(1))
                         ->whereDate('check_in', '>', Carbon::now()->subMonths(1))
                         ->get();
-        $work_hours = 1;
-        foreach($attendances as $attendance)
+
+        //unmarked submissions
+        $unmarked_submissions_count = 0;
+        foreach($teacher->sessions as $session)
         {
-            $check_in = Carbon::parse($attendance->check_in);
-            $check_out = Carbon::parse($attendance->check_out);
-            $work_hours += $check_in->diffInSeconds($check_out);
+            foreach($session->assignments as $assignment)
+            {
+                foreach($assignment->submissions as $submissions)
+                {
+                    if($submissions->marks == NULL)
+                    {
+                        $unmarked_submissions_count += 1;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
         }
-        $work_hours = gmdate('H:i:s',$work_hours);
-        return view('admin.dashboard.teacher_dashboard', compact('teacher', 'live_class_count', 'work_hours'));
+
+        //work hours
+        $previous_work_hours = 0;
+        $counter = -1;
+        if(count($attendances) > 0){
+            foreach($attendances as $attendance)
+            {
+                if($attendance->check_in && $attendance->check_out)
+                {
+                    $check_in = Carbon::parse($attendance->check_in);
+                    $check_out = Carbon::parse($attendance->check_out);
+                    $previous_work_hours += $check_in->diffInSeconds($check_out);
+                }
+                $counter++;
+            }
+
+            if($attendances[$counter]->check_out)
+            {
+                $wh = gmdate('H:i:s', $previous_work_hours);
+                $check = 'out';
+                $days = gmdate('d H:i:s', $previous_work_hours);
+                $total_days = substr($days,0,2)-1;
+            }
+            else
+            {
+                $current_checkin = Carbon::parse($attendances[$counter]->check_in);
+                $currenttime = Carbon::now()->addHours(5);
+                $work_hours = $current_checkin->diffInSeconds($currenttime);
+                $total_work_hours = $work_hours + $previous_work_hours;
+                $wh = gmdate('H:i:s', $total_work_hours);
+                $check = 'in';
+                $days = gmdate('d H:i:s', $total_work_hours);
+                $total_days = substr($days,0,2)-1;
+            }
+        }
+        else
+        {
+            $wh = gmdate('H:i:s',0);
+            $check = 'out';
+            $total_days = 0;
+        }
+
+        return view('admin.dashboard.teacher_dashboard', compact('teacher', 'live_class_count','unmarked_submissions_count', 'wh','check','total_days'));
     }
 }

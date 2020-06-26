@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class SubmissionController extends Controller
 {
@@ -22,7 +24,7 @@ class SubmissionController extends Controller
     {
         if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('teacher'))
         {
-            $submission = Submission::where('assignment_id', $request['assignment_id'])->with('assignment', 'student')->get();
+            $submission = Submission::all();
             return view('admin.submission.submission_list', compact('submission'));
         }
         if(auth()->user()->hasRole('student'))
@@ -95,14 +97,26 @@ class SubmissionController extends Controller
                 'file' => 'required',
             ]);
             // dd($_FILES);
-            $type = $_FILES['file']['type'];
-            $data = file_get_contents($_FILES['file']['tmp_name']);
+            // $type = $_FILES['file']['type'];
+            // $data = file_get_contents($_FILES['file']['tmp_name']);
+
+            //Purging Files Code Start//
+            $assignment = Assignment::all();
+            if(count($assignment) > 100){
+                for($i = 0; $i < 10; $i++){
+                    Storage::delete($assignment[$i]->file);
+                    Assignment::where('id', $assignment[$i]->id)->delete();
+                }
+            }
+            //Purging Files Code End//
+            
+            $assignment = Assignment::find($request->assignment_id);
+            $path = $request->file('file')->storeAs('public', auth()->user()->name.' - '.$assignment->session->course->title.' - '.$_FILES['file']['name']);
             DB::table('submissions')->insert([
                 'title' => $request->title,
                 'assignment_id' => $request->assignment_id,
                 'student_id' => $request->student_id,
-                'file' => $data,
-                'type' => $type,
+                'file' => $path,
                 'marks' => $request->marks,
             ]);
             // Assignment::create($request->all());
@@ -255,13 +269,14 @@ class SubmissionController extends Controller
         if(auth()->user()->hasRole('admin'))
         {
             $submission = Submission::find($request['submission_id']);
-            $file_contents = $submission->file;
-            return response($file_contents)
-                    ->header('Cache-Control', 'no-cache private')
-                    ->header('Content-Description', 'File Transfer')
-                    ->header('Content-Type', $submission->type)
-                    ->header('Content-length', strlen($file_contents))
-                    ->header('Content-Transfer-Encoding', 'binary');
+            return Storage::download($submission->file);
+            // $file_contents = $submission->file;
+            // return response($file_contents)
+            //         ->header('Cache-Control', 'no-cache private')
+            //         ->header('Content-Description', 'File Transfer')
+            //         ->header('Content-Type', $submission->type)
+            //         ->header('Content-length', strlen($file_contents))
+            //         ->header('Content-Transfer-Encoding', 'binary');
         }
         if(auth()->user()->hasRole('teacher'))
         {
@@ -269,13 +284,14 @@ class SubmissionController extends Controller
             $submission = Submission::find($request['submission_id']);
             if($submission->assignment->session->teacher_id == $teacher[0]->id)
             {
-                $file_contents = $submission->file;
-                return response($file_contents)
-                        ->header('Cache-Control', 'no-cache private')
-                        ->header('Content-Description', 'File Transfer')
-                        ->header('Content-Type', $submission->type)
-                        ->header('Content-length', strlen($file_contents))
-                        ->header('Content-Transfer-Encoding', 'binary');
+                return Storage::download($submission->file);
+                // $file_contents = $submission->file;
+                // return response($file_contents)
+                //         ->header('Cache-Control', 'no-cache private')
+                //         ->header('Content-Description', 'File Transfer')
+                //         ->header('Content-Type', $submission->type)
+                //         ->header('Content-length', strlen($file_contents))
+                //         ->header('Content-Transfer-Encoding', 'binary');
             }
             else
             {
@@ -286,15 +302,16 @@ class SubmissionController extends Controller
         {
             $student = Student::where('user_id', auth()->user()->id)->get();
             $submission = Submission::find($request['submission_id']);
-            if($submission->student_id == student[0]->id)
+            if($submission->student_id == $student[0]->id)
             {
-                $file_contents = $submission->file;
-                return response($file_contents)
-                        ->header('Cache-Control', 'no-cache private')
-                        ->header('Content-Description', 'File Transfer')
-                        ->header('Content-Type', $submission->type)
-                        ->header('Content-length', strlen($file_contents))
-                        ->header('Content-Transfer-Encoding', 'binary');
+                return Storage::download($submission->file);
+                // $file_contents = $submission->file;
+                // return response($file_contents)
+                //         ->header('Cache-Control', 'no-cache private')
+                //         ->header('Content-Description', 'File Transfer')
+                //         ->header('Content-Type', $submission->type)
+                //         ->header('Content-length', strlen($file_contents))
+                //         ->header('Content-Transfer-Encoding', 'binary');
             }
             else
             {

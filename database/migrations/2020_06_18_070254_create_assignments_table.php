@@ -19,13 +19,12 @@ class CreateAssignmentsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->integer('marks');
-            // $table->binary('file')->nullable;
-            $table->string('type');
+            $table->string('file')->nullable;
             $table->timestamps();
             $table->softDeletes()->nullable();
         });
 
-        DB::statement("ALTER TABLE assignments ADD file MEDIUMBLOB");
+        // DB::statement("ALTER TABLE assignments ADD file MEDIUMBLOB");
     }
 
     /**

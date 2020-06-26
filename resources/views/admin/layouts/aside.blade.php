@@ -162,7 +162,7 @@
                         <i class="fas fa-sign-out-alt fa-9x"></i>
                         Check-Out
                       </button>
-                      <h4 id="attendance_recorded">Good Bye!</h4>
+                      <h5 class = "" id="attendance_recorded">You have checked-out</h5>
                       <span id="check_in_time" style="font-size: 22px;"></span>
                   </div>
 
@@ -219,12 +219,13 @@
             type : 'get',
             url : '{{URL::to("checkInURL")}}',
             data:{"user_id":user_id},
-              success:function(data)
-              {
+              success:function(data){
                 $('#check_in_time').text('Check-In Time:'+data);
                 $('#check_in_time').fadeOut(4000,function(){
-                  $('#check-out').show(); 
+                $('#check-out').show();
+                 
                 });
+                location.reload();
               }
           });                          
       });
