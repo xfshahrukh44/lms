@@ -14,7 +14,7 @@
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
-                <h3> Your </h3>
+                <h3> Published </h3>
 
                 <p> <strong>Assignments</strong></p>
                 </div>

@@ -1,11 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content_header')
-    <div class="row mb-2">
-      <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Session</h1>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
 @endsection('content_header')
 
 @section('content_body')
@@ -49,25 +44,30 @@
                   
                   <!-- Main card content.. -->
 
-                    <div class="">
-                      <div class="container">
-                        <div class="form-group">
-                            <strong>Class: </strong>
-                            <a href = "{{route('section.show', $session->section->id)}}">{{ $session->section->classroom->title." - ".$session->section->title}}</a>
+                    <div class="row">
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Class</span>
+                          <span class="info-box-number"><a href = "{{route('section.show', $session->section->id)}}">{{ $session->section->classroom->title." - ".$session->section->title}}</a></span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Course: </strong>
-                            <a href = "{{route('course.show', $session->course->id)}}">{{$session->course->classroom->title." - ".$session->course->title}}</a>
-                            
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Course</span>
+                          <span class="info-box-number"><a href = "{{route('course.show', $session->course->id)}}">{{$session->course->classroom->title." - ".$session->course->title}}</a></span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Teacher: </strong>
-                            <a href = "{{route('teacher.show', $session->teacher->id)}}">{{$session->teacher->name}}</a>
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Teacher</span>
+                          <span class="info-box-number"><a href = "{{route('teacher.show', $session->teacher->id)}}">{{$session->teacher->name}}</a></span>
                         </div>
+                      </div>
                     </div>
                     <div class="container">
                         <div class="form-group">

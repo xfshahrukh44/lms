@@ -19,8 +19,16 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $student = Student::with('section', 'user')->get();
-        return view('admin.student.student_list', compact('student'));
+        if(auth()->user()->hasRole('admin'))
+        {
+            $student = Student::with('section', 'user')->get();
+            return view('admin.student.student_list', compact('student'));
+        }
+        else
+        {
+            $student = (Student::where('user_id', auth()->user()->id)->get())[0];
+            return $this->show($student->id);
+        }
     }
 
     /**
@@ -30,23 +38,30 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $student = Student::with('section', 'user')->get();
-
-        $user = User::all();
-        $user_name = [];
-        foreach($user as $user)
+        if(auth()->user()->hasRole('admin'))
         {
-            $user_name[$user->id] = $user->name;
+            $student = Student::with('section', 'user')->get();
+    
+            $user = User::all();
+            $user_name = [];
+            foreach($user as $user)
+            {
+                $user_name[$user->id] = $user->name;
+            }
+    
+            $section = Section::all();
+            $section_name = [];
+            foreach($section as $section)
+            {
+                $section_name[$section->id] = $section->classroom->title." - ".$section->title;
+            }
+            
+            return view('admin.student.student_create', compact('student', 'user_name', 'section_name'));
         }
-
-        $section = Section::all();
-        $section_name = [];
-        foreach($section as $section)
+        else
         {
-            $section_name[$section->id] = $section->classroom->title." - ".$section->title;
+            return redirect()->route('student.index');
         }
-        
-        return view('admin.student.student_create', compact('student', 'user_name', 'section_name'));
     }
 
     /**
@@ -57,14 +72,21 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:100',
-            'contact' => 'required|string|max:100',
-            'address' => 'required|string|max:300',
-            'section_id' => 'required'
-        ]);
-        $student = Student::create($request->all());
-        return redirect()->route('student.index')->with('success','Student Created Successfully');
+        if(auth()->user()->hasRole('admin'))
+        {
+            $this->validate($request, [
+                'name' => 'required|string|max:100',
+                'contact' => 'required|string|max:100',
+                'address' => 'required|string|max:300',
+                'section_id' => 'required'
+            ]);
+            $student = Student::create($request->all());
+            return redirect()->route('student.index')->with('success','Student Created Successfully');
+        }
+        else
+        {
+            return redirect()->route('student.index');
+        }
     }
 
     /**
@@ -75,12 +97,31 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $student = Student::find($id);
-        $class_title = $student->section->classroom->title;
-        $section_title = $student->section->title;
-        $of = $class_title." - ".$section_title;
-
-        return view('admin.student.student_detail', compact('student', 'of'));
+        if(auth()->user()->hasRole('admin'))
+        {
+            $student = Student::find($id);
+            $class_title = $student->section->classroom->title;
+            $section_title = $student->section->title;
+            $of = $class_title." - ".$section_title;
+    
+            return view('admin.student.student_detail', compact('student', 'of'));
+        }
+        else
+        {
+            if($id == auth()->user->id)
+            {
+                $student = Student::find($id);
+                $class_title = $student->section->classroom->title;
+                $section_title = $student->section->title;
+                $of = $class_title." - ".$section_title;
+        
+                return view('admin.student.student_detail', compact('student', 'of'));
+            }
+            else
+            {
+                return redirect()->route('student.index');
+            }
+        }
     }
 
     /**
@@ -91,23 +132,31 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        $student = Student::find($id);
-
-        $user = User::all();
-        $user_name = [];
-        foreach($user as $user)
+        if(auth()->user()->hasRole('admin'))
         {
-            $user_name[$user->id] = $user->name;
-        }
+            $student = Student::find($id);
 
-        $section = Section::all();
-        $section_name = [];
-        foreach($section as $section)
+            $user = User::all();
+            $user_name = [];
+            foreach($user as $user)
+            {
+                $user_name[$user->id] = $user->name;
+            }
+
+            $section = Section::all();
+            $section_name = [];
+            foreach($section as $section)
+            {
+                $section_name[$section->id] = $section->classroom->title." - ".$section->title;
+            }
+
+            return view('admin.student.student_update', compact('student', 'user_name', 'section_name'));
+        }
+        else
         {
-            $section_name[$section->id] = $section->classroom->title." - ".$section->title;
+            return redirect()->route('student.index');
         }
-
-        return view('admin.student.student_update', compact('student', 'user_name', 'section_name'));
+        
     }
 
     /**
@@ -119,14 +168,22 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:100',
-            'contact' => 'required|string|max:100',
-            'address' => 'required|string|max:300',
-            'section_id' => 'required'
-        ]);
-        $student = Student::find($id)->update($request->all());
-        return redirect()->route('student.show', $id)->with('message', 'Student updated successfully!');
+        if(auth()->user()->hasRole('admin'))
+        {
+            $this->validate($request, [
+                'name' => 'required|string|max:100',
+                'contact' => 'required|string|max:100',
+                'address' => 'required|string|max:300',
+                'section_id' => 'required'
+            ]);
+            $student = Student::find($id)->update($request->all());
+            return redirect()->route('student.show', $id)->with('message', 'Student updated successfully!');
+        }
+        else
+        {
+            return redirect()->route('student.index');
+        }
+        
     }
 
     /**
@@ -137,8 +194,15 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        Student::where('id', $id)->delete();
-        return redirect()->route('student.index')->with('success','Student Deleted Successfully');
+        if(auth()->user()->hasRole('admin'))
+        {
+            Student::where('id', $id)->delete();
+            return redirect()->route('student.index')->with('success','Student Deleted Successfully');
+        }
+        else
+        {
+            return redirect()->route('student.index');
+        }
     }
     
     public function view_dashboard(Request $request)

@@ -1,11 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content_header')
-    <div class="row mb-2">
-      <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Program</h1>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
 @endsection('content_header')
 
 @section('content_body')
@@ -45,21 +40,27 @@
                   
                   <!-- Main card content.. -->
 
-                    <div class="">
-                      <div class="container">
-                        <div class="form-group">
-                            <strong>Title: </strong>
-                            {{ $program->title}}
+                    <div class="row">
+                    <div class="col-md-12 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Title</span>
+                          <span class="info-box-number">{{ $program->title}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Schools: </strong>
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Schools</span>
+                          <span class="info-box-number">
                             @foreach($program->schools as $key => $value)
-                              <br>
                               <a href ="{{route('school.show', $value->id)}}"> {{$value->title}} </a>
+                              <br>
                             @endforeach
+                          </span>
                         </div>
+                      </div>
                     </div>
 
                     </div>

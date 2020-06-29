@@ -45,24 +45,30 @@
                   
                   <!-- Main card content.. -->
                   
-                  <div class="">
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Title: </strong>
-                            {{ $user->name}}
+                  <div class="row">
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Name</span>
+                          <span class="info-box-number">{{ $user->name}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Email: </strong>
-                            {{ $user->email}}
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Email</span>
+                          <span class="info-box-number">{{ $user->email}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Role: </strong>
-                            {{ $role[0]->name}}
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Role</span>
+                          <span class="info-box-number">{{ $role[0]->name}}</span>
                         </div>
+                      </div>
                     </div>
                     
                   </div>

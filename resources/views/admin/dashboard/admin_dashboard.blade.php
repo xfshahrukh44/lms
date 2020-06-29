@@ -32,7 +32,7 @@
                 <div class="inner">
                 <h3> Teachers </h3>
 
-                <p><strong><br></strong></p>
+                <p><strong>{{$active_teacher_count." out of ".$teacher_count." visited today"}}</strong></p>
                 </div>
                 <div class="icon">
                 <i class="material-icons">record_voice_over</i>
@@ -62,7 +62,7 @@
                 <div class="inner">
                 <h3> Students </h3>
 
-                <p><strong><br></strong></p>
+                <p><strong>{{$active_student_count." out of ".$student_count." visited today"}}</strong></p>
                 </div>
                 <div class="icon">
                 <i class="material-icons">people</i>

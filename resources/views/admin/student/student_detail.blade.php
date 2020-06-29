@@ -1,11 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content_header')
-    <div class="row mb-2">
-      <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Student</h1>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
 @endsection('content_header')
 
 @section('content_body')
@@ -45,36 +40,46 @@
                   
                   <!-- Main card content.. -->
 
-                    <div class="">
-                      <div class="container">
-                        <div class="form-group">
-                            <strong>Name: </strong>
-                            {{ $student->name}}
+                    <div class="row">
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Name</span>
+                          <span class="info-box-number">{{ $student->name}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>OF: </strong>
-                            <a href ="{{route('section.show', $student->section->id)}}"> {{$of}} </a>
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">OF</span>
+                          <span class="info-box-number"><a href ="{{route('section.show', $student->section->id)}}"> {{$of}} </a></span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Contact: </strong>
-                            {{$student->contact}}
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Contact</span>
+                          <span class="info-box-number">{{$student->contact}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Address: </strong>
-                            {{$student->address}}
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Address</span>
+                          <span class="info-box-number">{{$student->address}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Account: </strong>
-                            <a href = "{{route('user.show', $student->user_id)}}">{{$student->user->email}}</a>
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Account</span>
+                          <span class="info-box-number"><a href = "{{route('user.show', $student->user_id)}}">{{$student->user->email}}</a></span>
                         </div>
+                      </div>
                     </div>
 
                     </div>

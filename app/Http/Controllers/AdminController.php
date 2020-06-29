@@ -7,6 +7,9 @@ use App\Models\Section;
 use App\Models\Session;
 use App\Models\Submission;
 use App\Models\Attendance;
+use App\Models\Teacher;
+use App\Models\Student;
+use App\User;
 use Carbon\Carbon;
 
 class AdminController extends Controller
@@ -88,6 +91,40 @@ class AdminController extends Controller
             $total_days = 0;
         }
 
-        return view('admin.dashboard.admin_dashboard', compact('assignment_count', 'submission_count', 'live_class_count', 'wh','check','total_days'));
+        //active teachers
+        $teacher = Teacher::all();
+        $teacher_count = count($teacher);
+        $active_teacher_count = 0 ;
+        foreach($teacher as $teacher)
+        {
+            $user = User::find($teacher->user_id);
+            $check1 = Attendance::where('user_id', $user->id)
+                                ->whereDate('check_in', '>=', Carbon::today())
+                                ->get();
+            if(count($check1) > 0)
+            {
+                $active_teacher_count += 1;
+            }
+            else continue;
+        }
+
+        //active students
+        $student = Student::all();
+        $student_count = count($student);
+        $active_student_count = 0 ;
+        foreach($student as $student)
+        {
+            $user = User::find($student->user_id);
+            $check2 = Attendance::where('user_id', $user->id)
+                                ->whereDate('check_in', '>=', Carbon::today())
+                                ->get();
+            if(count($check2) > 0)
+            {
+                $active_student_count += 1;
+            }
+            else continue;
+        }
+
+        return view('admin.dashboard.admin_dashboard', compact('assignment_count', 'submission_count', 'live_class_count', 'wh','check','total_days', 'teacher_count', 'active_teacher_count', 'student_count', 'active_student_count'));
     }
 }

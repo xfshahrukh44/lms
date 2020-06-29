@@ -1,11 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content_header')
-    <div class="row mb-2">
-      <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Submission</h1>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
 @endsection('content_header')
 
 @section('content_body')
@@ -48,36 +43,46 @@
                   
                   <!-- Main card content.. -->
 
-                    <div class="">
-                      <div class="container">
-                        <div class="form-group">
-                            <strong>Assignment Title: </strong>
-                            {{ $submission->assignment->title}}
+                    <div class="row">
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Assignment Title</span>
+                          <span class="info-box-number">{{ $submission->assignment->title}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Student: </strong>
-                            {{ $submission->student->name}}
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Student</span>
+                          <span class="info-box-number">{{ $submission->student->name}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Title: </strong>
-                            {{ $submission->title}}
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Title</span>
+                          <span class="info-box-number">{{ $submission->title}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Marks: </strong>
-                            {{ $submission->marks}}
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Marks</span>
+                          <span class="info-box-number">{{ $submission->marks}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group row pl-2">
-                            <strong class="pr-2">Download file: </strong>
-                            <a href="{{route('submit', ['submission_id' => $submission->id])}}"><span class="material-icons">get_app</span></a>
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Download file</span>
+                          <span class="info-box-number"><a href="{{route('submit', ['submission_id' => $submission->id])}}"><span class="material-icons">get_app</span></a></span>
                         </div>
+                      </div>
                     </div>
 
                     </div>

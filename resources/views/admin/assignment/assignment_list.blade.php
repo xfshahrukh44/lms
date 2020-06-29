@@ -53,7 +53,7 @@
                                 <a class="btn btn-info btn-xs" href="{{route('assignment.show',$value->id)}}">
                                 <span class="material-icons">remove_red_eye</span>
                                 </a>
-
+                                @role('admin|teacher')
                                 <a class="btn btn-warning btn-xs" href="{{route('assignment.edit',$value->id)}}">
                                 <span class="material-icons">create</span>
                                 </a>
@@ -65,6 +65,7 @@
                                   </button>
                                   {{ Form::close() }}
                                 </div>
+                                @endrole
 
                               </div>
                             </td>

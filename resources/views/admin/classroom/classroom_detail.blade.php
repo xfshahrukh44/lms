@@ -1,11 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content_header')
-    <div class="row mb-2">
-      <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Classroom</h1>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
 @endsection('content_header')
 
 @section('content_body')
@@ -45,38 +40,52 @@
                   
                   <!-- Main card content.. -->
 
-                    <div class="">
-                      <div class="container">
-                        <div class="form-group">
-                            <strong>Title: </strong>
-                            {{ $classroom->title}}
+                    <div class="row">
+                    <div class="col-md-6 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Title</span>
+                          <span class="info-box-number">{{ $classroom->title}}</span>
                         </div>
-                    </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>School: </strong>
-                            <a href ="{{route('school.show', $classroom->school->id)}}"> {{$classroom->school->title}} </a>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Courses: </strong>
-                            @foreach($classroom->courses as $key => $value)
-                              <br>
-                              <a href ="{{route('course.show', $value->id)}}"> {{$value->title}} </a>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Sections: </strong>
-                            @foreach($classroom->sections as $key => $value)
-                              <br>
-                              <a href ="{{route('section.show', $value->id)}}"> {{$value->title}} </a>
-                            @endforeach
-                        </div>
+                      </div>
                     </div>
 
+                    <div class="col-md-6 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">School</span>
+                          <span class="info-box-number"><a href ="{{route('school.show', $classroom->school->id)}}"> {{$classroom->school->title}} </a></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Courses</span>
+                          <span class="info-box-number">
+                          @foreach($classroom->courses as $key => $value)
+                            <a href ="{{route('course.show', $value->id)}}"> {{$value->title}} </a>
+                            <br>
+                          @endforeach
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Sections</span>
+                          <span class="info-box-number">
+                          @foreach($classroom->sections as $key => $value)
+                            <a href ="{{route('section.show', $value->id)}}"> {{$value->title}} </a>
+                            <br>
+                          @endforeach
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                     </div>
                 
                   

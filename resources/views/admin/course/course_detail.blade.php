@@ -1,11 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content_header')
-    <div class="row mb-2">
-      <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Course</h1>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
 @endsection('content_header')
 
 @section('content_body')
@@ -45,20 +40,23 @@
                   
                   <!-- Main card content.. -->
 
-                    <div class="">
-                      <div class="container">
-                        <div class="form-group">
-                            <strong>Title: </strong>
-                            {{ $course->title}}
+                    <div class="row">
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Title</span>
+                          <span class="info-box-number">{{ $course->title}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Class: </strong>
-                            <a href ="{{route('classroom.show', $course->classroom->id)}}"> {{$course->classroom->title}} </a>
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Class</span>
+                          <span class="info-box-number"><a href ="{{route('classroom.show', $course->classroom->id)}}"> {{$course->classroom->title}} </a></span>
                         </div>
+                      </div>
                     </div>
-
                     </div>
                 
                   

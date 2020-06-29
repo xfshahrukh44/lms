@@ -1,11 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content_header')
-    <div class="row mb-2">
-      <div class="col-sm-6">
-          <h1 class="m-0 text-dark">School</h1>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
 @endsection('content_header')
 
 @section('content_body')
@@ -45,33 +40,43 @@
                   
                   <!-- Main card content.. -->
 
-                    <div class="">
-                      <div class="container">
-                        <div class="form-group">
-                            <strong>Title: </strong>
-                            {{ $school->title}}
+                    <div class="row">
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Title</span>
+                          <span class="info-box-number">{{ $school->title}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Location: </strong>
-                            {{ $school->location}}
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Location</span>
+                          <span class="info-box-number">{{ $school->location}}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Program: </strong>
-                            <a href = "{{route('program.show', $school->program->id)}}">{{ $school->program->title}}</a>
+                    <div class="col-md-4 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Program</span>
+                          <span class="info-box-number"><a href = "{{route('program.show', $school->program->id)}}">{{ $school->program->title}}</a></span>
                         </div>
+                      </div>
                     </div>
-                    <div class="container">
-                        <div class="form-group">
-                            <strong>Classes: </strong>
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Classes</span>
+                          <span class="info-box-number">
                             @foreach($school->classrooms as $key => $value)
-                              <br>
                               <a href ="{{route('classroom.show', $value->id)}}"> {{$value->title}} </a>
+                              <br>
                             @endforeach
+                          </span>
                         </div>
+                      </div>
                     </div>
 
                     </div>
