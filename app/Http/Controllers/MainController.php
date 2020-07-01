@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class MainController extends Controller
 {
@@ -12,17 +13,23 @@ class MainController extends Controller
         {
             return redirect()->route('login');
         }
-        else if(auth()->user()->hasRole('admin'))
+        if(auth()->user()->hasRole('admin'))
         {
             return redirect()->route('adminhome');
         }
-        else if(auth()->user()->hasRole('teacher'))
+        if(auth()->user()->hasRole('teacher'))
         {
             return redirect()->route('teacherhome');
         }
-        else if(auth()->user()->hasRole('student'))
+        if(auth()->user()->hasRole('student'))
         {
             return redirect()->route('studenthome');
+        }
+        if(auth()->user()->hasRole('guest'))
+        {
+            dd('aa');
+            exit();
+            return redirect()->route('guest');
         }
     }
 

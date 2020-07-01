@@ -27,6 +27,11 @@ class DatabaseSeeder extends Seeder
             'guard_name' => 'web',
         ]);
 
+        DB::table('roles')->insert([
+            'name' => 'guest',
+            'guard_name' => 'web',
+        ]);
+
         //users
         DB::table('users')->insert([ 
             'role_id' => '1',
@@ -36,10 +41,24 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([ 
+            'role_id' => '1',
+            'name' => 'Admin', 
+            'email' => 'admin@gmail.com', 
+            'password' => bcrypt('12345678'), 
+        ]);
+
+        DB::table('users')->insert([ 
             'role_id' => '2',
-            'name' => 'Teacher 1', 
+            'name' => 'Teacher', 
             'email' => 't1@teacher.com', 
             'password' => bcrypt('pajgptam2'), 
+        ]);
+
+        DB::table('users')->insert([ 
+            'role_id' => '2',
+            'name' => 'Teacher 1', 
+            'email' => 'teacher@gmail.com', 
+            'password' => bcrypt('12345678'), 
         ]);
 
         DB::table('users')->insert([ 
@@ -47,6 +66,13 @@ class DatabaseSeeder extends Seeder
             'name' => 'Student 1', 
             'email' => 's1@student.com', 
             'password' => bcrypt('pajgptam2'), 
+        ]);
+
+        DB::table('users')->insert([ 
+            'role_id' => '1',
+            'name' => 'Student', 
+            'email' => 'student@gmail.com', 
+            'password' => bcrypt('12345678'), 
         ]);
 
         //model has roles

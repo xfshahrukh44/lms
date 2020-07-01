@@ -36,7 +36,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function()
 //all users
 Route::group(['middleware' => ['auth', 'role:admin|teacher|student']], function()
 {
-    Route::get('/', 'MainController@dashboard');
+    Route::get('/', 'MainController@dashboard')->name('/');
     Route::resource('/session', 'SessionController');
     Route::resource('/attendance', 'AttendanceController');
     Route::resource('/assignment', 'AssignmentController');
