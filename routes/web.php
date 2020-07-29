@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 
-Route::get('guest', 'MainController@guest');
+Route::get('/', 'MainController@dashboard')->name('/');
+Route::get('guest', 'MainController@guest')->name('guest');
 
 //admin only
 Route::group(['middleware' => ['auth', 'role:admin']], function()
@@ -34,9 +35,8 @@ Route::group(['middleware' => ['auth', 'role:admin']], function()
 });
 
 //all users
-Route::group(['middleware' => ['auth', 'role:admin|teacher|student']], function()
+Route::group(['middleware' => ['auth', 'role:admin|teacher|student|guest']], function()
 {
-    Route::get('/', 'MainController@dashboard')->name('/');
     Route::resource('/session', 'SessionController');
     Route::resource('/attendance', 'AttendanceController');
     Route::resource('/assignment', 'AssignmentController');

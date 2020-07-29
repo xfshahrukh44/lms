@@ -10,6 +10,7 @@ use App\Models\Attendance;
 use App\Models\Teacher;
 use App\Models\Student;
 use App\User;
+use App\Charts\TeacherChart;
 use Carbon\Carbon;
 
 class AdminController extends Controller
@@ -31,7 +32,7 @@ class AdminController extends Controller
             }
         }
         
-        //your submissions
+        //submissions
         $submission = Submission::all();
         $submission_count = count($submission);
 
@@ -98,7 +99,7 @@ class AdminController extends Controller
         foreach($teacher as $teacher)
         {
             $user = User::find($teacher->user_id);
-            $check1 = Attendance::where('user_id', $user->id)
+            $check1 = Attendance::where('user_id', auth()->user()->id)
                                 ->whereDate('check_in', '>=', Carbon::today())
                                 ->get();
             if(count($check1) > 0)
@@ -124,6 +125,11 @@ class AdminController extends Controller
             }
             else continue;
         }
+
+        //ChartWork
+        // $teacher_chart = new TeacherChart;
+        // $teacher_chart->labels(['one', 'two', 'three', 'four']);
+        // $teacher_chart->dataset('my dataset 1', 'line', [1, 2, 3, 4]);
 
         return view('admin.dashboard.admin_dashboard', compact('assignment_count', 'submission_count', 'live_class_count', 'wh','check','total_days', 'teacher_count', 'active_teacher_count', 'student_count', 'active_student_count'));
     }

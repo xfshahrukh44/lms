@@ -39,41 +39,33 @@ class DatabaseSeeder extends Seeder
             'email' => 'a@a.com', 
             'password' => bcrypt('pajgptam2'), 
         ]);
-
+        
         DB::table('users')->insert([ 
             'role_id' => '1',
             'name' => 'Admin', 
-            'email' => 'admin@gmail.com', 
+            'email' => 'admin@admin.com', 
             'password' => bcrypt('12345678'), 
         ]);
 
-        DB::table('users')->insert([ 
-            'role_id' => '2',
-            'name' => 'Teacher', 
-            'email' => 't1@teacher.com', 
-            'password' => bcrypt('pajgptam2'), 
-        ]);
+        for($i = 1; $i <= 10; $i++)
+        {
+            DB::table('users')->insert([ 
+                'role_id' => '2',
+                'name' => 'Teacher'.' '.$i, 
+                'email' => 't'.$i.'@teacher.com', 
+                'password' => bcrypt('12345678'), 
+            ]);
+        }
 
-        DB::table('users')->insert([ 
-            'role_id' => '2',
-            'name' => 'Teacher 1', 
-            'email' => 'teacher@gmail.com', 
-            'password' => bcrypt('12345678'), 
-        ]);
-
-        DB::table('users')->insert([ 
-            'role_id' => '3',
-            'name' => 'Student 1', 
-            'email' => 's1@student.com', 
-            'password' => bcrypt('pajgptam2'), 
-        ]);
-
-        DB::table('users')->insert([ 
-            'role_id' => '1',
-            'name' => 'Student', 
-            'email' => 'student@gmail.com', 
-            'password' => bcrypt('12345678'), 
-        ]);
+        for($i = 1; $i <= 80; $i++)
+        {
+            DB::table('users')->insert([ 
+                'role_id' => '3',
+                'name' => 'Student'.' '.$i, 
+                'email' => 's'.$i.'@student.com', 
+                'password' => bcrypt('12345678'), 
+            ]);
+        }
 
         //model has roles
         DB::table('model_has_roles')->insert([ 
@@ -83,17 +75,28 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('model_has_roles')->insert([ 
-            'role_id' => '2',
+            'role_id' => '1',
             'model_id' => '2', 
             'model_type' => 'App\User',
         ]);
 
-        DB::table('model_has_roles')->insert([ 
-            'role_id' => '3',
-            'model_id' => '3',
-            'model_type' => 'App\User',
-        ]);
+        for($i = 3; $i <= 12; $i++)
+        {
+            DB::table('model_has_roles')->insert([ 
+                'role_id' => '2',
+                'model_id' => $i, 
+                'model_type' => 'App\User',
+            ]);
+        }
 
+        for($i = 13; $i <= 92; $i++)
+        {
+            DB::table('model_has_roles')->insert([ 
+                'role_id' => '3',
+                'model_id' => $i, 
+                'model_type' => 'App\User',
+            ]);
+        }
 
         //program
         DB::table('programs')->insert([ 
@@ -108,51 +111,94 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //classroom
-        DB::table('classrooms')->insert([ 
-            'title' => '1',
-            'school_id' => '1', 
-        ]);
-
+        for($i = 1; $i <= 10; $i++)
+        {
+            DB::table('classrooms')->insert([ 
+                'title' => $i,
+                'school_id' => '1', 
+            ]);
+        }
+        
         //section
-        DB::table('sections')->insert([ 
-            'title' => 'A',
-            'classroom_id' => '1', 
-        ]);
-
-        DB::table('sections')->insert([ 
-            'title' => 'B',
-            'classroom_id' => '1', 
-        ]);
+        $section = ['A', 'B', 'C', 'D'];
+        for($i = 1; $i <= 10; $i++)
+        {
+            for($j = 0; $j <= 3; $j++)
+            {
+                DB::table('sections')->insert([ 
+                    'title' => $section[$j],
+                    'classroom_id' => $i, 
+                ]);
+            }
+        }
 
         //course
-        DB::table('courses')->insert([ 
-            'title' => 'Urdu',
-            'classroom_id' => '1', 
-        ]);
+        $course = ['Urdu', 'English', 'Maths', 'Science', 'Geography', 'Social Studies', 'Physics', 'Chemistry', 'Computer', 'Sindhi'];
+        for($i = 1; $i <= 10; $i++)
+        {
+            for($j = 0; $j <= 9; $j++)
+            {
+                DB::table('courses')->insert([ 
+                    'title' => $course[$j],
+                    'classroom_id' => $i, 
+                ]);
+            }
+        }
+        
         
         //student
-        DB::table('students')->insert([ 
-            'name' => 'Student 1',
-            'contact' => '666', 
-            'address' => 'asd', 
-            'section_id' => '1',
-            'user_id' => '3', 
-        ]);
+        for($i = 1, $j =13; $i <= 40, $j <= 92; $i++, $j++)
+        {
+            DB::table('students')->insert([ 
+                'name' => 'Student '.$i,
+                'contact' => '666', 
+                'address' => 'asd', 
+                'section_id' => $i,
+                'user_id' => $j,
+            ]);
+        }
 
         //teacher
-        DB::table('teachers')->insert([ 
-            'name' => 'Teacher 1',
-            'contact' => '666', 
-            'address' => 'asd', 
-            'user_id' => '2', 
-        ]);
+        for($i = 3, $j = 1; $i <= 12, $j <= 10; $i++, $j++)
+        {
+            DB::table('teachers')->insert([ 
+                'name' => 'Teacher '.$j,
+                'contact' => '666', 
+                'address' => 'asd', 
+                'user_id' => $i, 
+            ]);
+        }
+        
 
         //session
-        DB::table('sessions')->insert([ 
-            'section_id' => '1',
-            'course_id' => '1', 
-            'teacher_id' => '1',
-            'meeting_url' => 'https://meet.google.com/duo-mbgq-mxy' 
-        ]);
+        // for($i = 1; $i <= 40; $i++)
+        // {
+        //     for($j = 1; $j <= 10; $j++)
+        //     {
+        //         DB::table('sessions')->insert([ 
+        //             'section_id' => $i,
+        //             'course_id' => $j, 
+        //             'teacher_id' => $j,
+        //             'meeting_url' => 'https://meet.google.com/duo-mbgq-mxy' 
+        //         ]);
+        //     }
+        // }
+        for($i = 1; $i <= 4; $i++)
+        {
+            for($j = 1; $j <= 4; $j++)
+            {
+                for($k = 1; $k <= 4; $k++)
+                {
+                    DB::table('sessions')->insert([ 
+                        'section_id' => $i,
+                        'course_id' => $j, 
+                        'teacher_id' => $k,
+                        'meeting_url' => 'https://meet.google.com/duo-mbgq-mxy' 
+                    ]);
+                }
+            }
+          
+        }
+        
     }
 }

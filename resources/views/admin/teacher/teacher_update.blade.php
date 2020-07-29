@@ -27,7 +27,7 @@
                   
                   <!-- Main card content.. -->
 
-                  {{ Form::model($teacher, ['route'=>['teacher.update',$teacher->id],'method'=>'PATCH']) }}
+                  {{ Form::model($teacher, ['route'=>['teacher.update',$teacher->id],'method'=>'PATCH', 'enctype' => 'multipart/form-data']) }}
                   @include('admin.teacher.teacher_master')
                   {{ Form::close() }}
 

@@ -25,13 +25,13 @@ class AssignmentController extends Controller
     {
         if(auth()->user()->hasRole('admin'))
         {
-            $assignment = Assignment::with('session')->get();
+            $assignment = Assignment::with('session')->paginate(10);
             return view('admin.assignment.assignment_list', compact('assignment'));
         }
         if(auth()->user()->hasRole('student'))
         {
             $assignment = [];
-            $student = Student::where('user_id', auth()->user()->id)->get();
+            $student = Student::where('user_id', auth()->user()->id)->paginate(10);
             $section = Section::find($student[0]->section_id);
             foreach($section->sessions as $session)
             {

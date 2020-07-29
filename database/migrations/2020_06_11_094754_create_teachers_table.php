@@ -19,6 +19,7 @@ class CreateTeachersTable extends Migration
             $table->string('name');
             $table->string('contact');
             $table->longText('address');
+            $table->string('image')->default('/img/profile.png');
             $table->timestamps();
             $table->softDeletes()->nullable();
         });

@@ -75,7 +75,7 @@
                           @endforeach 
                       </tbody>
                     </table>
-                    <!-- paginator --!! $school->links() !!>
+                    {{$school->links()}}
                   </div>
 
                   <!-- /.Main card-content.. -->

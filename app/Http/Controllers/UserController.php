@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::all();
+        $user = User::paginate(10);
         $role = Role::all();
         return view('admin.user.user_list', compact('user', 'role'));
     }

@@ -16,7 +16,7 @@ class SectionController extends Controller
      */
     public function index()
     {
-        $section = Section::with('classroom', 'students', 'sessions')->get();
+        $section = Section::with('classroom', 'students', 'sessions')->paginate(10);
         return view('admin.section.section_list', compact('section'));
     }
 

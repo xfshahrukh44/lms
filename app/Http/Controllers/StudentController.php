@@ -21,12 +21,12 @@ class StudentController extends Controller
     {
         if(auth()->user()->hasRole('admin'))
         {
-            $student = Student::with('section', 'user')->get();
+            $student = Student::with('section', 'user')->paginate(10);
             return view('admin.student.student_list', compact('student'));
         }
         else
         {
-            $student = (Student::where('user_id', auth()->user()->id)->get())[0];
+            $student = (Student::where('user_id', auth()->user()->id)->paginate(10))[0];
             return $this->show($student->id);
         }
     }

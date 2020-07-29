@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Teacher;
 use App\Models\Session;
 use App\Models\Attendance;
+use DB;
 use Carbon\Carbon;
 use App\User;
+use Auth;
 
 
 class TeacherController extends Controller
@@ -19,8 +21,16 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teacher = Teacher::with('sessions', 'user')->get();
-        return view('admin.teacher.teacher_list', compact('teacher'));
+        if(auth()->user()->hasRole('admin'))
+        {
+            $teacher = Teacher::with('sessions', 'user')->paginate(10);
+            return view('admin.teacher.teacher_list', compact('teacher'));
+        }
+        else
+        {
+            $teacher = (Teacher::where('user_id', auth()->user()->id)->paginate(10))[0];
+            return view('admin.teacher.teacher_list', compact('teacher'));
+        }
     }
 
     /**
@@ -30,16 +40,23 @@ class TeacherController extends Controller
      */
     public function create()
     {
-        $teacher = Teacher::with('sessions', 'user')->get();
-
-        $user = User::all();
-        $user_name = [];
-        foreach($user as $user)
+        if(auth()->user()->hasRole('admin'))
         {
-            $user_name[$user->id] = $user->name;
+            $teacher = Teacher::with('sessions', 'user')->get();
+
+            $user = User::all();
+            $user_name = [];
+            foreach($user as $user)
+            {
+                $user_name[$user->id] = $user->name;
+            }
+            
+            return view('admin.teacher.teacher_create', compact('teacher', 'user_name'));
         }
-        
-        return view('admin.teacher.teacher_create', compact('teacher', 'user_name'));
+        else
+        {
+            return redirect()->route('teacher.index');
+        }
     }
 
     /**
@@ -54,8 +71,16 @@ class TeacherController extends Controller
             'name' => 'required|string|max:100',
             'contact' => 'required|string|max:100',
             'address' => 'required|string|max:300',
+            'user_id' => 'required'
         ]);
-        $teacher = Teacher::create($request->all());
+        $path = $request->file('image')->storeAs('img', auth()->user()->name.' - '.$_FILES['image']['name']);
+        DB::table('teachers')->insert([
+            'user_id' => $request->user_id,
+            'name' => $request->name,
+            'contact' => $request->contact,
+            'address' => $request->address,
+            'image' => $path,
+        ]);
         return redirect()->route('teacher.index')->with('success','Teacher Created Successfully');
     }
 
@@ -67,27 +92,54 @@ class TeacherController extends Controller
      */
     public function show($id)
     {
-        $teacher = Teacher::find($id);
-
-        $raw_sessions = Session::where('teacher_id', $teacher->id)->get();
-        $sessions = [];
-        foreach($raw_sessions as $raw_session)
+        if(auth()->user()->hasRole('admin'))
         {
-            $class_title = $raw_session->section->classroom->title;
-
-            $section_title = $raw_session->section->title;
-
-            $section_detail = $class_title." - ".$section_title;
-
-            $course_title = $raw_session->course->title;
-
-            $session_detail = $section_detail." - ".$course_title;
-
-            $sessions[$raw_session->id] = $session_detail;
-
+            $teacher = Teacher::find($id);
+    
+            $raw_sessions = Session::where('teacher_id', $teacher->id)->get();
+            $sessions = [];
+            foreach($raw_sessions as $raw_session)
+            {
+                $class_title = $raw_session->section->classroom->title;
+    
+                $section_title = $raw_session->section->title;
+    
+                $section_detail = $class_title." - ".$section_title;
+    
+                $course_title = $raw_session->course->title;
+    
+                $session_detail = $section_detail." - ".$course_title;
+    
+                $sessions[$raw_session->id] = $session_detail;
+    
+            }
+    
+            return view('admin.teacher.teacher_detail', compact('teacher', 'sessions'));
         }
-
-        return view('admin.teacher.teacher_detail', compact('teacher', 'sessions'));
+        else
+        {
+            $teacher = (Teacher::where('user_id', auth()->user()->id)->get())[0];
+    
+            $raw_sessions = Session::where('teacher_id', $teacher->id)->get();
+            $sessions = [];
+            foreach($raw_sessions as $raw_session)
+            {
+                $class_title = $raw_session->section->classroom->title;
+    
+                $section_title = $raw_session->section->title;
+    
+                $section_detail = $class_title." - ".$section_title;
+    
+                $course_title = $raw_session->course->title;
+    
+                $session_detail = $section_detail." - ".$course_title;
+    
+                $sessions[$raw_session->id] = $session_detail;
+    
+            }
+    
+            return view('admin.teacher.teacher_detail', compact('teacher', 'sessions'));
+        }
     }
 
     /**
@@ -98,16 +150,32 @@ class TeacherController extends Controller
      */
     public function edit($id)
     {
-        $teacher = Teacher::find($id);
-
-        $user = User::all();
-        $user_name = [];
-        foreach($user as $user)
+        if(auth()->user()->hasRole('admin|teacher'))
         {
-            $user_name[$user->id] = $user->name;
+            $teacher = Teacher::find($id);
+    
+            $user = User::all();
+            $user_name = [];
+            foreach($user as $user)
+            {
+                $user_name[$user->id] = $user->name;
+            }
+    
+            return view('admin.teacher.teacher_update', compact('teacher', 'user_name'));
         }
-
-        return view('admin.teacher.teacher_update', compact('teacher', 'user_name'));
+        else
+        {
+            $teacher = (Teacher::where('user_id', auth()->user()->id)->get())[0];
+    
+            $user = User::all();
+            $user_name = [];
+            foreach($user as $user)
+            {
+                $user_name[$user->id] = $user->name;
+            }
+    
+            return view('admin.teacher.teacher_update', compact('teacher', 'user_name'));
+        }
     }
 
     /**
@@ -119,13 +187,29 @@ class TeacherController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:100',
-            'contact' => 'required|string|max:100',
-            'address' => 'required|string|max:300',
-        ]);
-        $teacher = Teacher::find($id)->update($request->all());
-        return redirect()->route('teacher.show', $id)->with('message', 'Teacher updated successfully!');
+        if(auth()->user()->hasRole('admin'))
+        {
+            $this->validate($request, [
+                'name' => 'required|string|max:100',
+                'contact' => 'required|string|max:100',
+                'address' => 'required|string|max:300',
+            ]);
+            $teacher = Teacher::find($id)->update($request->all());
+            return redirect()->route('teacher.show', $id)->with('message', 'Teacher updated successfully!');
+        }
+        else
+        {
+            $teacher = $teacher = Teacher::find($id);
+            if($teacher->user_id == auth()->user()->id)
+            {
+                $this->validate($request, [
+                    'image' => 'required'
+                ]);
+                $teacher = Teacher::find($id)->update($request->all());
+                return redirect()->route('teacher.show', $id)->with('message', 'Teacher updated successfully!');
+            }
+            return redirect()->route('teacher.index');
+        }
     }
 
     /**
@@ -136,8 +220,15 @@ class TeacherController extends Controller
      */
     public function destroy($id)
     {
-        Teacher::where('id', $id)->delete();
-        return redirect()->route('teacher.index')->with('success','Teacher Deleted Successfully');
+        if(auth()->user()->hasRole('admin'))
+        {
+            Teacher::where('id', $id)->delete();
+            return redirect()->route('teacher.index')->with('success','Teacher Deleted Successfully');
+        }
+        else
+        {
+            return redirect()->route('teacher.index');
+        }
     }
 
     public function view_dashboard(Request $request)

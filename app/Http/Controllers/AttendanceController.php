@@ -21,7 +21,7 @@ class AttendanceController extends Controller
         ->join('users', 'attendances.user_id','=', 'users.id')
         ->select('attendances.id','attendances.check_in','attendances.check_out','users.name AS user_name')
         ->where('attendances.user_id', auth()->user()->id)
-        ->get();
+        ->paginate(10);
 
         return view('admin.attendance.attendance_list', compact('attendance'));
     }

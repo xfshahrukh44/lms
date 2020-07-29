@@ -15,7 +15,7 @@ class ClassroomController extends Controller
      */
     public function index()
     {
-        $classroom = Classroom::with('school', 'courses', 'sections')->get();
+        $classroom = Classroom::with('school', 'courses', 'sections')->paginate(10);
         return view('admin.classroom.classroom_list', compact('classroom'));
     }
 

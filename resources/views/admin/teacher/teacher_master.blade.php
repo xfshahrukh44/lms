@@ -27,6 +27,14 @@
                               </div>
                           </div>
 
+                          <div class="col-md-4">
+                              <div class="form-group">
+                                {{ Form::label('image', 'image') }}
+                                {{ Form::file('image', null, ['class'=>'form-control']) }}
+                                <!-- <input type="file" name="file"> -->
+                              </div>
+                          </div>
+
                           <div class="col-md-12">
                               {{Form::button(isset($model)? 'Update' : 'Save', ['class' => 'btn btn-primary','type' => 'submit'])}}
                           </div>   

@@ -15,7 +15,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $program = Program::with('schools')->get();
+        $program = Program::with('schools')->paginate(10);
         return view('admin.program.program_list', compact('program'));
     }
 

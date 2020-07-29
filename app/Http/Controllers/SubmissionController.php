@@ -30,7 +30,7 @@ class SubmissionController extends Controller
         if(auth()->user()->hasRole('student'))
         {
             $student =(Student::where('user_id', auth()->user()->id)->get())[0];
-            $submission = Submission::where('student_id', $student->id)->get();
+            $submission = Submission::where('student_id', $student->id)->paginate(10);
             return view('admin.submission.submission_list', compact('submission'));
         }
         {

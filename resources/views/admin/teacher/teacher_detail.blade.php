@@ -41,6 +41,17 @@
                   <!-- Main card content.. -->
 
                     <div class="row">
+
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box" style = "text-align: center;">
+                        <div class="info-box-content">
+                          <span class="info-box-text">Name</span>
+                          <img src="{{asset('storage/'.$teacher->image)}}"/>
+                          {{asset('storage/'.$teacher->image)}}
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="col-md-3 col-sm-6 col-12">
                       <div class="info-box" style = "text-align: center;">
                         <div class="info-box-content">
@@ -56,7 +67,7 @@
                           <span class="info-box-number">{{$teacher->contact}}</span>
                         </div>
                       </div>
-                    </div>
+                    </div> 
                     <div class="col-md-3 col-sm-6 col-12">
                       <div class="info-box" style = "text-align: center;">
                         <div class="info-box-content">

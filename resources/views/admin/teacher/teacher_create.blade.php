@@ -27,7 +27,7 @@
                   
                   <!-- Main card content.. -->
 
-                    {{Form::open(['route' => 'teacher.store', 'method' => 'POST'])}}
+                    {{Form::open(['route' => 'teacher.store', 'method' => 'POST', 'enctype' => 'multipart/form-data'])}}
                       @include('admin.teacher.teacher_master')                
                     {{ Form::close() }}
                     

@@ -21,18 +21,18 @@ class SessionController extends Controller
     {
         if(auth()->user()->hasRole('admin'))
         {
-            $session = Session::with('course', 'teacher', 'section', 'assignments')->get();
+            $session = Session::with('course', 'teacher', 'section', 'assignments')->paginate(10);
             return view('admin.session.session_list', compact('session'));
         }
         if(auth()->user()->hasRole('teacher'))
         {
-            $teacher = Teacher::where('user_id', auth()->user()->id)->get();
+            $teacher = Teacher::where('user_id', auth()->user()->id)->paginate(10);
             $session = Session::where('teacher_id', $teacher[0]->id)->with('course', 'teacher', 'section', 'assignments')->get();
             return view('admin.session.session_list', compact('session'));
         }
         if(auth()->user()->hasRole('student'))
         {
-            $student = Student::where('user_id', auth()->user()->id)->get();
+            $student = Student::where('user_id', auth()->user()->id)->paginate(10);
             $session = Session::where('section_id', $student[0]->section->id)->with('course', 'teacher', 'section', 'assignments')->get();
             return view('admin.session.session_list', compact('session'));
         }
